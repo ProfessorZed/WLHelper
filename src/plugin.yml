@@ -1,0 +1,5 @@
+main: me.zed.helper.Helper
+name: Warlords Helper
+version: 1.0
+commands:
+   helper:
