@@ -1,6 +1,5 @@
 package me.zed.helper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,16 +13,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Helper extends JavaPlugin implements Listener {
+public class CTF extends JavaPlugin implements Listener {
 
-    public String disabled = ChatColor.GREEN + "Helper:" + ChatColor.RED + " Disabled";
-    public String enabled = ChatColor.GREEN + "Helper:" + ChatColor.DARK_GREEN + " Enabled";
+    public String disabled = ChatColor.GREEN + "CTF Helper:" + ChatColor.RED + " Disabled";
+    public String enabled = ChatColor.GREEN + "CTF Helper:" + ChatColor.DARK_GREEN + " Enabled";
 
     public List<String> helplore = new ArrayList<>();
     public List<String> cominglore = new ArrayList<>();
@@ -42,8 +42,14 @@ public class Helper extends JavaPlugin implements Listener {
     ItemStack helper = new ItemStack(Material.PAPER);
     ItemMeta helpermeta = helper.getItemMeta();
 
+
+    public static Plugin plugin;
     public void onEnable() {
+        plugin = this;
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Domination(this), this);
+        this.getCommand("Dom").setExecutor(new Domination(this));
+
         helpmeta.setDisplayName(ChatColor.GREEN + "Help me!");
         helplore.add(ChatColor.RED + "Clicking on this item will request aid at your location.");
         helpmeta.setLore(helplore);
@@ -64,9 +70,25 @@ public class Helper extends JavaPlugin implements Listener {
         flaglore.add(flaglore2);
         flagmeta.setLore(flaglore);
         flag.setItemMeta(flagmeta);
+
+        //dom
+        String names = ChatColor.RED + "Request aid at " + ChatColor.GREEN.toString() + ChatColor.BOLD;
+        Domination.farmeta.setDisplayName(names + "Farm");
+        Domination.bsmeta.setDisplayName(names + "Blacksmith");
+        Domination.lmeta.setDisplayName(names + "Lumbermill");
+        Domination.minesmeta.setDisplayName(names + "Mines");
+        Domination.stablesmeta.setDisplayName(names + "Stables");
+        Domination.farm.setItemMeta(Domination.farmeta);
+        Domination.bs.setItemMeta(Domination.bsmeta);
+        Domination.lm.setItemMeta(Domination.lmeta);
+        Domination.mines.setItemMeta(Domination.minesmeta);
+        Domination.stables.setItemMeta(Domination.stablesmeta);
+
+        Domination.currentmeta.setDisplayName(names + "Your current location");
+        Domination.current.setItemMeta(Domination.currentmeta);
     }
 
-    public String wlname = ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + "75" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Mage" + ChatColor.DARK_GRAY + "]"
+    public static String wlname = ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + "75" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Mage" + ChatColor.DARK_GRAY + "]"
             + ChatColor.AQUA + "[MVP" + ChatColor.RED + "+" + ChatColor.AQUA + "] Professor_Zed";
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
@@ -80,8 +102,6 @@ public class Helper extends JavaPlugin implements Listener {
         }
         return false;
     }
-
-    public Player p;
 
     public HashMap<Player, ItemStack[]> invSave = new HashMap<Player, ItemStack[]>();
 

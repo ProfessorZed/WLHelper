@@ -1,5 +1,6 @@
-main: me.zed.helper.Helper
-name: Warlords Helper
+name: WLHelper
+main: me.zed.helper.CTF
 version: 1.0
 commands:
    helper:
+   dom:
